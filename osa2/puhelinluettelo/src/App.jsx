@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import personService from './services/persons'
 import PersonForm from './components/PersonForm'
 import Filter from './components/Filter'
 import Persons from './components/Persons'
@@ -10,17 +10,24 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [filterWord, setFilterWord] = useState('')
 
-  const hook = () => {
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log('promise fulfilled')
-        setPersons(response.data)
+  useEffect(() => {
+    personService
+      .getAll()
+      .then(initialPersons => {
+        setPersons(initialPersons)
+      })
+  }, [])
+
+  const deletePerson = id => {
+    const person = persons.find(n => n.id === id)
+    console.log("delete painettu")
+
+    personService
+      .deleteMe(id , person)
+      .then(returnedPerson => {
+        setPersons(persons.map(person => person.id !== id ? person : returnedPerson))
       })
   }
-
-  useEffect(hook, [])
 
   const addPerson = (event) => {
     event.preventDefault()
@@ -36,9 +43,14 @@ const App = () => {
       return
     }
 
-    setPersons(persons.concat(personObject))
-    setNewName('')
-    setNewNumber('')
+    //setPersons(persons.concat(personObject))
+    personService
+      .create(personObject)
+      .then(returnedPerson => {
+        setPersons(persons.concat(returnedPerson))
+        setNewName('')
+        setNewNumber('')
+      })
   }
 
   const handleNameChange = (event) => {
@@ -77,6 +89,7 @@ const App = () => {
       <Persons
         persons={persons}
         filterWord={filterWord}
+        deletePerson={deletePerson}
       />
 
     </div>
