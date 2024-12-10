@@ -22,11 +22,13 @@ const App = () => {
     const person = persons.find(n => n.id === id)
     console.log("delete painettu")
 
-    personService
-      .deleteMe(id , person)
-      .then(returnedPerson => {
-        setPersons(persons.map(person => person.id !== id ? person : returnedPerson))
-      })
+    if (window.confirm(`Delete ${person.name} ?`)) {
+      personService
+        .deleteMe(id)
+        .then(returnedPerson => {
+          setPersons(persons.map(person => person.id !== id ? person : returnedPerson))
+        })
+    }
   }
 
   const addPerson = (event) => {
@@ -39,7 +41,22 @@ const App = () => {
     console.log(`${personObject.name} is the name`)
 
     if (persons.map(person => person.name).includes(personObject.name)) {
-      alert(`${personObject.name} is already added to phonebook`)
+      if (window.confirm(`${personObject.name} is already added to phonebook, replace the old number with a new one?`)) {
+        const thisPerson = persons.find(p => p.name === personObject.name)
+        const changedPerson = {...thisPerson, number: newNumber}
+        personService
+          .update(thisPerson.id, changedPerson)
+          .then(returnedPerson => {
+            setPersons(persons.map(person => person.id !== thisPerson.id ? person : returnedPerson))
+            })
+          .catch(error => {
+            alert(
+              "Problems with editing number. Nothing will be changed."
+            )
+          })
+      }
+      setNewName('')
+      setNewNumber('')
       return
     }
 
@@ -74,7 +91,7 @@ const App = () => {
         handleFilterChange={handleFilterChange}
       />
 
-      <h3>add a new</h3>
+      <h3>Add a new</h3>
 
       <PersonForm
         addPerson={addPerson}

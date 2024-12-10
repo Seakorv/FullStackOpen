@@ -7,7 +7,7 @@ const Persons = (props) => {
           {' '}
           {person.number}
           {' '}
-          <button onClick={props.deletePerson}>{'delete'}</button>
+          <button onClick={() => props.deletePerson(person.id)}>{'delete'}</button>
         </p>
         )
   )

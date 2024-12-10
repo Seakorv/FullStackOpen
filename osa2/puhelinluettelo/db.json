@@ -1,29 +1,19 @@
 {
   "persons": [
     {
-      "name": "Arto Hellas",
-      "number": "040-123456",
-      "id": "1"
-    },
-    {
-      "name": "Ada Lovelace",
-      "number": "39-44-5323523",
-      "id": "2"
-    },
-    {
-      "name": "Dan Abramov",
-      "number": "12-43-234345",
-      "id": "3"
-    },
-    {
-      "name": "Mary Poppendieck",
-      "number": "39-23-6423122",
-      "id": "4"
-    },
-    {
-      "id": "33e0",
-      "name": "Testi Toimiiko",
+      "id": "a923",
+      "name": "test2",
       "number": "69420"
+    },
+    {
+      "id": "2414",
+      "name": "test1",
+      "number": "1234567890"
+    },
+    {
+      "id": "2509",
+      "name": "tuntuupas hyvältä että toimii",
+      "number": "123"
     }
   ]
 }
