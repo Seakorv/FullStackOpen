@@ -3,12 +3,15 @@ import personService from './services/persons'
 import PersonForm from './components/PersonForm'
 import Filter from './components/Filter'
 import Persons from './components/Persons'
+import Notification from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filterWord, setFilterWord] = useState('')
+  const [notificationMessage, setNotificationMessage] = useState(null)
+  const [isError, setIsError] = useState(false)
 
   useEffect(() => {
     personService
@@ -27,6 +30,22 @@ const App = () => {
         .deleteMe(id)
         .then(returnedPerson => {
           setPersons(persons.map(person => person.id !== id ? person : returnedPerson))
+          setNotificationMessage(
+            `Deleted ${person.name}`
+          )
+          setTimeout(() => {
+            setNotificationMessage(null)
+          }, 5000)
+          setIsError(false)
+        })
+        .catch(error => {
+          setNotificationMessage(
+            `Information of ${person.name} has already been removed from server`
+          )
+          setTimeout(() => {
+            setNotificationMessage(null)
+          }, 5000)
+          setIsError(true)
         })
     }
   }
@@ -43,16 +62,27 @@ const App = () => {
     if (persons.map(person => person.name).includes(personObject.name)) {
       if (window.confirm(`${personObject.name} is already added to phonebook, replace the old number with a new one?`)) {
         const thisPerson = persons.find(p => p.name === personObject.name)
-        const changedPerson = {...thisPerson, number: newNumber}
+        const changedPerson = { ...thisPerson, number: newNumber }
         personService
           .update(thisPerson.id, changedPerson)
           .then(returnedPerson => {
             setPersons(persons.map(person => person.id !== thisPerson.id ? person : returnedPerson))
-            })
-          .catch(error => {
-            alert(
-              "Problems with editing number. Nothing will be changed."
+            setNotificationMessage(
+              `Changed the number of ${personObject.name} to ${changedPerson.number}`
             )
+            setTimeout(() => {
+              setNotificationMessage(null)
+            }, 5000)
+            setIsError(false)
+          })
+          .catch(error => {
+            setNotificationMessage(
+              `Information of ${personObject.name} has already been removed from server`
+            )
+            setTimeout(() => {
+              setNotificationMessage(null)
+            }, 5000)
+            setIsError(true)
           })
       }
       setNewName('')
@@ -67,6 +97,12 @@ const App = () => {
         setPersons(persons.concat(returnedPerson))
         setNewName('')
         setNewNumber('')
+        setNotificationMessage(
+          `Added ${newName}`
+        )
+        setTimeout(() => {
+          setNotificationMessage(null)
+        }, 5000)
       })
   }
 
@@ -85,6 +121,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notificationMessage} isError={isError}/>
 
       <Filter
         filterWord={filterWord}
