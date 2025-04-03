@@ -7,33 +7,37 @@ import axios from 'axios'
 const App = () => {
   const [searchWord, setSearchWord] = useState('')
   const [countries, setCountries] = useState({})
-
-  /*Pohtimisa tulevaisuuteen
-
-    Pitää hakea listaan maita "includes" tyylillä. Eli tehdä .get
-    useasti koko API:n läpi. Toimii varmasti parhaiten api/names/${}
-    tyylillä.
-    Ei pakolla toimikaan, koska api:sta voi hakea vain tarkat nimet.
-    eli api/all johonkin muuttujaan, etsitään sieltä juttuja.
-    sitten kun on vaan yksi jäljellä, voisi tehdä api/name:n
-
-    Nyt siis pitäisi parsea api/all countries sillein, että siitä voisi hakea nimellä
-    asioita.
-
-    ehkä käytä sittenkin getAll ensiksi johonkin ja käsittele sitä tiedostoa sitten
-  */
+  const [searchedCountries, setSearchedCountries] = useState({})
 
 
   useEffect(() => {
     console.log('Hakusana on: ' + searchWord)
+    var searchCountryArray = []
+
+    axios
+      .get(`https://studies.cs.helsinki.fi/restcountries/api/all`)
+      .then(response => {
+        setCountries(response.data)
+        //console.log(response.data)
+        //console.log(countries.length + " clength")
+      })
+
     if (searchWord) {
-      console.log("moi")
-      axios
-        .get(`https://studies.cs.helsinki.fi/restcountries/api/all`)
-        .then(response => {
-          setCountries(response.data)
-          console.log(response.data)
-        })
+
+      for (let i = 0; i < countries.length; i++) {
+        //console.log("loopissa")
+        //console.log(countries[i].name.common)
+        if (countries[i].name.common.toLowerCase().includes(searchWord.toLowerCase())) {
+          searchCountryArray.push(countries[i].name.common)
+          /*if (searchCountryArray.length > 10) {
+            break
+          }*/
+        }
+      }
+      //Jos yli 10, Pois
+      setSearchedCountries(searchCountryArray)
+      console.log(searchedCountries)
+      console.log("Countries length: " + searchedCountries.length)
     }
   }, [searchWord])
 
@@ -42,9 +46,11 @@ const App = () => {
     return null
   }
 
+
   const handleSearchWordChange = (event) => {
     setSearchWord(event.target.value)
   }
+
 
   const onSearch = (event) => {
     event.preventDefault()
@@ -61,9 +67,9 @@ const App = () => {
         />
       </form>
       <pre>
-        {JSON.stringify(countries, null, 2)}
+      {JSON.stringify(searchedCountries, null, 2)}
       </pre>
-    </div>
+      </div>
   )
 }
 
