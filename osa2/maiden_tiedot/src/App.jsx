@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import countryService from './services/countries'
-import FindCountries from './components/FindCountries'
+import PrintCountries from './components/PrintCountries'
 import Countries from './components/Countries'
 import axios from 'axios'
 
@@ -18,7 +18,8 @@ const App = () => {
       .get(`https://studies.cs.helsinki.fi/restcountries/api/all`)
       .then(response => {
         setCountries(response.data)
-        //console.log(response.data)
+        console.log(response.data)
+        //setSearchedCountries(response.data)
         //console.log(countries.length + " clength")
       })
 
@@ -28,7 +29,7 @@ const App = () => {
         //console.log("loopissa")
         //console.log(countries[i].name.common)
         if (countries[i].name.common.toLowerCase().includes(searchWord.toLowerCase())) {
-          searchCountryArray.push(countries[i].name.common)
+          searchCountryArray.push(countries[i])
           /*if (searchCountryArray.length > 10) {
             break
           }*/
@@ -66,9 +67,9 @@ const App = () => {
           onChange={handleSearchWordChange}
         />
       </form>
-      <pre>
-      {JSON.stringify(searchedCountries, null, 2)}
-      </pre>
+      <PrintCountries
+        searchedCountries={searchedCountries}
+      />
       </div>
   )
 }
