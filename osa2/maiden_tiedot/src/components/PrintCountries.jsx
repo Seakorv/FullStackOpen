@@ -1,10 +1,23 @@
+import PrintOneCountry from './PrintOneCountry'
+
 const PrintCountries = (props) => {
+  var oneCountry = null
+  var searchSpecificCountry = false
   //console.log(props.searchedCountries)
   if (props.searchedCountries.length > 1 && props.searchedCountries.length <= 10) {
     return (
       props.searchedCountries.map(country =>
         <p key={country.name.common}>
           {country.name.common}
+          <button onClick={() =>
+            {
+              console.log("moi");
+              <PrintOneCountry
+                country={country}>
+              </PrintOneCountry>}
+            }>
+            show
+          </button>
         </p>
       )
     )
@@ -15,26 +28,11 @@ const PrintCountries = (props) => {
     )
   }
   else if (props.searchedCountries.length === 1 && props.oneCountry != null) {
-    console.log("Tulostamassa...")
-    console.log(props.oneCountry)
-    var country = props.oneCountry
-    console.log(country)
-    console.log(country.languages.fin)
+    oneCountry = props.oneCountry
     return (
-      <div>
-        <h1>{country.name.common}</h1>
-        <p>Capital {country.capital}</p>
-        <p>Area {country.area}</p>
-        <h2>Languages</h2>
-        <ul>
-          {Object.entries(country.languages).map(([short, full], i) =>
-            <li key={i}>
-              {full}
-            </li>
-          )}
-        </ul>
-        <img src={country.flags.png} alt={country.flags.alt}/>
-      </div>
+      <PrintOneCountry
+        country={oneCountry}
+      />
     )
   }
 }
