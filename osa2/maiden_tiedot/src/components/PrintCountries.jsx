@@ -35,7 +35,4 @@ const PrintCountries = ({ searchedCountries, oneCountry, buttonPressed, cityWeat
   }
 }
 
-
-//<pre>{JSON.stringify(props.searchedCountries, null, 2)}</pre>
-
 export default PrintCountries

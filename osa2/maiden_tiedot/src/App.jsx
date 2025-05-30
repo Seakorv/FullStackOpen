@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react'
-//import countryService from './services/countries'
 import PrintCountries from './components/PrintCountries'
-//import Countries from './components/Countries'
 import axios from 'axios'
 
 const App = () => {
@@ -35,6 +33,8 @@ const App = () => {
   }
 
   const getWeather = capital => {
+    //Jostain syystä nämä weatherSearched ehdot laittoivat säänhaun toimimaan
+    //niin, ettei joka renderillä näy ainakaan konsolissa hakua. Tietäisinpä tarkkaan miksi
     if (!weatherSearched) {
       setWeatherSearched(true)
       axios
@@ -56,7 +56,6 @@ const App = () => {
       console.log("Jes nappi")
       console.log(buttonCountry.name.common)
       setOneCountry(buttonCountry)
-      //setButtonPressed(false)
     }
   }
 
@@ -74,12 +73,6 @@ const App = () => {
       console.log(searchCountryArray.length)
       setSearchedCountries(searchCountryArray)
     }
-  }
-
-
-  //en tiiä tarviiko, ei ainakaan vielä riko mitään
-  if (!countries) {
-    return null
   }
 
 
@@ -121,7 +114,6 @@ const App = () => {
         cityWeather={cityWeather}
         setButtonPressed={setButtonPressed}
         setButtonCountry={setButtonCountry}
-        setWeatherSearched={setWeatherSearched}
       />
       </div>
   )
