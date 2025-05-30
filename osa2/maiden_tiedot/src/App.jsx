@@ -5,12 +5,15 @@ import PrintCountries from './components/PrintCountries'
 import axios from 'axios'
 
 const App = () => {
+  const api_key = import.meta.env.VITE_SOME_KEY
   const [searchWord, setSearchWord] = useState('')
   const [countries, setCountries] = useState({})
   const [oneCountry, setOneCountry] = useState(null)
   const [searchedCountries, setSearchedCountries] = useState({})
   const [buttonPressed, setButtonPressed] = useState(false)
   const [buttonCountry, setButtonCountry] = useState(null)
+  const [cityWeather, setCityWeather] = useState(null)
+  const [weatherSearched, setWeatherSearched] = useState(false)
 
   const getAllCountries = () => {
     axios
@@ -25,21 +28,31 @@ const App = () => {
 
   const searchOneCountry = () => {
     if (searchedCountries.length === 1) {
-      var searchOneCountry = searchedCountries[0].name.common.toLowerCase()
-      axios
-        .get(`https://studies.cs.helsinki.fi/restcountries/api/name/${searchOneCountry}`)
-        .then(response => {
-          setOneCountry(response.data)
-          console.log("Yksi maa: ")
-          console.log(response.data)
-        })
+      var thisCountry = searchedCountries[0]
+      setOneCountry(thisCountry)
+      getWeather(thisCountry.capital)
     }
   }
 
-  useEffect(searchOneCountry, [searchedCountries])
+  const getWeather = capital => {
+    if (!weatherSearched) {
+      setWeatherSearched(true)
+      axios
+        .get(`https://api.openweathermap.org/data/2.5/weather?q=${capital}&appid=${api_key}`)
+        .then(response => {
+          setCityWeather(response.data)
+          console.log("Sää haettu")
+          console.log(response.data)
+          })
+    }
+  }
+
+  useEffect(searchOneCountry, [searchedCountries, getWeather])
 
   const buttonSearch = () => {
     if (buttonPressed) {
+      //console.log(buttonCountry.capital)
+      getWeather(buttonCountry.capital)
       console.log("Jes nappi")
       console.log(buttonCountry.name.common)
       setOneCountry(buttonCountry)
@@ -47,13 +60,13 @@ const App = () => {
     }
   }
 
-  useEffect(buttonSearch, [buttonPressed, buttonCountry])
+  useEffect(buttonSearch, [buttonPressed, buttonCountry, getWeather])
 
-  const searchCountries = () => {
+  const searchCountries = word => {
     var searchCountryArray = []
-    if (searchWord) {
+    if (word) {
       for (let i = 0; i < countries.length; i++) {
-        if (countries[i].name.common.toLowerCase().includes(searchWord.toLowerCase())) {
+        if (countries[i].name.common.toLowerCase().includes(word.toLowerCase())) {
           searchCountryArray.push(countries[i])
         }
       }
@@ -71,10 +84,11 @@ const App = () => {
 
 
   const handleSearchWordChange = (event) => {
-    setSearchWord(event.target.value)
+    const newSearchWord = event.target.value
+    setSearchWord(newSearchWord)
     console.log("Hakusana:")
     console.log(event.target.value)
-    //searchCountries()
+    searchCountries(newSearchWord)
   }
 
 
@@ -104,8 +118,10 @@ const App = () => {
         oneCountry={oneCountry}
         setOneCountry={setOneCountry}
         buttonPressed={buttonPressed}
+        cityWeather={cityWeather}
         setButtonPressed={setButtonPressed}
         setButtonCountry={setButtonCountry}
+        setWeatherSearched={setWeatherSearched}
       />
       </div>
   )

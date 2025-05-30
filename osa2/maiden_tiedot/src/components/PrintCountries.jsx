@@ -1,13 +1,13 @@
 import PrintOneCountry from './PrintOneCountry'
 
-const PrintCountries = ({ searchedCountries, oneCountry, buttonPressed, setButtonPressed, setButtonCountry, setOneCountry }) => {
-  if (oneCountry != null && (searchedCountries.length === 1 || buttonPressed)) {
+const PrintCountries = ({ searchedCountries, oneCountry, buttonPressed, cityWeather, setButtonPressed, setButtonCountry}) => {
+  if (oneCountry != null && cityWeather != null &&(searchedCountries.length === 1 || buttonPressed)) {
     console.log("oneCountry != null")
     console.log(buttonPressed)
-    //setButtonPressed(false)
     return (
       <PrintOneCountry
         country={oneCountry}
+        cityWeather={cityWeather}
       />
     )
   }
@@ -33,13 +33,6 @@ const PrintCountries = ({ searchedCountries, oneCountry, buttonPressed, setButto
       <p>Too many matches, specify another filter</p>
     )
   }
-  /*else if (searchedCountries.length === 1 && oneCountry != null) {
-    return (
-      <PrintOneCountry
-        country={oneCountry}
-      />
-    )
-    }*/
 }
 
 
