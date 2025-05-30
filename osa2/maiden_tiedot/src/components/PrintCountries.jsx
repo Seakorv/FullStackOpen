@@ -1,40 +1,45 @@
 import PrintOneCountry from './PrintOneCountry'
 
-const PrintCountries = (props) => {
-  var oneCountry = null
-  var searchSpecificCountry = false
-  //console.log(props.searchedCountries)
-  if (props.searchedCountries.length > 1 && props.searchedCountries.length <= 10) {
-    return (
-      props.searchedCountries.map(country =>
-        <p key={country.name.common}>
-          {country.name.common}
-          <button onClick={() =>
-            {
-              console.log("moi");
-              <PrintOneCountry
-                country={country}>
-              </PrintOneCountry>}
-            }>
-            show
-          </button>
-        </p>
-      )
-    )
-  }
-  else if (props.searchedCountries.length > 10) {
-    return (
-      <p>Too many matches, specify another filter</p>
-    )
-  }
-  else if (props.searchedCountries.length === 1 && props.oneCountry != null) {
-    oneCountry = props.oneCountry
+const PrintCountries = ({ searchedCountries, oneCountry, buttonPressed, setButtonPressed, setButtonCountry, setOneCountry }) => {
+  if (oneCountry != null && (searchedCountries.length === 1 || buttonPressed)) {
+    console.log("oneCountry != null")
+    console.log(buttonPressed)
+    //setButtonPressed(false)
     return (
       <PrintOneCountry
         country={oneCountry}
       />
     )
   }
+  console.log("Onko nappi painettu?")
+  console.log(buttonPressed)
+  if (searchedCountries.length > 1 && searchedCountries.length <= 10) {
+    return (
+      searchedCountries.map(country =>
+        <p key={country.name.common}>
+          {country.name.common + " "}
+          <button onClick={() => {
+            setButtonPressed(true);
+            setButtonCountry(country);
+          }}>
+            show
+          </button>
+        </p>
+      )
+    )
+  }
+  else if (searchedCountries.length > 10) {
+    return (
+      <p>Too many matches, specify another filter</p>
+    )
+  }
+  /*else if (searchedCountries.length === 1 && oneCountry != null) {
+    return (
+      <PrintOneCountry
+        country={oneCountry}
+      />
+    )
+    }*/
 }
 
 

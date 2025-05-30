@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
-import countryService from './services/countries'
+//import countryService from './services/countries'
 import PrintCountries from './components/PrintCountries'
-import Countries from './components/Countries'
+//import Countries from './components/Countries'
 import axios from 'axios'
 
 const App = () => {
@@ -9,6 +9,8 @@ const App = () => {
   const [countries, setCountries] = useState({})
   const [oneCountry, setOneCountry] = useState(null)
   const [searchedCountries, setSearchedCountries] = useState({})
+  const [buttonPressed, setButtonPressed] = useState(false)
+  const [buttonCountry, setButtonCountry] = useState(null)
 
   const getAllCountries = () => {
     axios
@@ -35,6 +37,17 @@ const App = () => {
   }
 
   useEffect(searchOneCountry, [searchedCountries])
+
+  const buttonSearch = () => {
+    if (buttonPressed) {
+      console.log("Jes nappi")
+      console.log(buttonCountry.name.common)
+      setOneCountry(buttonCountry)
+      //setButtonPressed(false)
+    }
+  }
+
+  useEffect(buttonSearch, [buttonPressed, buttonCountry])
 
   const searchCountries = () => {
     var searchCountryArray = []
@@ -74,6 +87,7 @@ const App = () => {
     searchCountries()
     event.preventDefault()
     setSearchWord(searchWord)
+    setButtonPressed(false)
   }
 
 
@@ -88,7 +102,10 @@ const App = () => {
       <PrintCountries
         searchedCountries={searchedCountries}
         oneCountry={oneCountry}
-        //oneCountry={oneCountry}
+        setOneCountry={setOneCountry}
+        buttonPressed={buttonPressed}
+        setButtonPressed={setButtonPressed}
+        setButtonCountry={setButtonCountry}
       />
       </div>
   )
