@@ -23,7 +23,7 @@ const App = () => {
 
   const deletePerson = id => {
     const person = persons.find(n => n.id === id)
-    console.log("delete painettu")
+    console.log("delete painettu jes")
 
     if (window.confirm(`Delete ${person.name} ?`)) {
       personService
