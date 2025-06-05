@@ -1,8 +1,6 @@
 const Persons = (props) => {
-  const filterWord = (props.filterWord ?? '').toLowerCase();
-
   return (
-    props.persons.filter(person => (person.name ?? '').toLowerCase().includes(filterWord))
+    props.persons.filter(person => person.name.toLowerCase().includes(props.filterWord.toLowerCase()))
       .map(person =>
         <p key={person.name}>
           {person.name}
