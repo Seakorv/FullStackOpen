@@ -59,7 +59,7 @@ app.post('/api/persons', (request, response) => {
   }
 
   const person = {
-    id: generateId(),
+    id: generateId().toString(),
     name: body.name,
     number: body.number,
   }
