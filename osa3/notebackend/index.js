@@ -7,38 +7,34 @@ const app = express()
 app.use(express.json())
 app.use(express.static('dist'))
 
-let notes = []
-
-app.post('/api/notes', (request, response) => {
-  const body = request.body
-
-  if (!body.content) {
-    return response.status(400).json({
-      error: 'content missing'
-    })
-  }
-
-  const note = new Note({
-    content: body.content,
-    import: body.important || false,
-  })
-
-  note.save().then(savedNote => {
-    response.json(savedNote)
-  })
-})
-
 const errorHandler = (error, request, response, next) => {
   console.error(error.message)
 
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
+  } else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message })
   }
 
   next(error)
 }
 
-app.use(errorHandler)
+app.post('/api/notes', (request, response, next) => {
+  const body = request.body
+  if (!body.content) {
+    return response.status(400).json({ error: 'content missing' })
+  }
+
+  const note = new Note({
+    content: body.content,
+    important: body.important || false,
+  })
+
+  note.save().then(savedNote => {
+    response.json(savedNote)
+  })
+  .catch(error => next(error))
+})
 
 app.get('/', (request, response) => {
   response.send('<h1>Hello World!</h1>')
@@ -95,6 +91,7 @@ const unknownEndpoint = (request, response) => {
 }
 
 app.use(unknownEndpoint)
+app.use(errorHandler)
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
