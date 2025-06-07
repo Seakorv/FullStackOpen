@@ -105,6 +105,15 @@ const App = () => {
           setNotificationMessage(null)
         }, 5000)
       })
+      .catch(error => {
+        // Oikean viestin tulostus löytyi, kun tulosti error-objektin
+        // konsoliin, kiitos console.log
+        setNotificationMessage(error.response.data.error)
+        setTimeout(() => {
+          setNotificationMessage(null)
+        }, 5000)
+        setIsError(true)
+      })
   }
 
   const handleNameChange = (event) => {
