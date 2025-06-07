@@ -24,12 +24,13 @@ const App = () => {
   const deletePerson = id => {
     const person = persons.find(n => n.id === id)
     console.log("delete painettu jes")
+    console.log(id)
 
     if (window.confirm(`Delete ${person.name} ?`)) {
       personService
         .deleteMe(id)
-        .then(returnedPerson => {
-          setPersons(persons.map(person => person.id !== id ? person : returnedPerson))
+        .then(() => {
+          setPersons(persons.filter(person => person.id !== id))
           setNotificationMessage(
             `Deleted ${person.name}`
           )
