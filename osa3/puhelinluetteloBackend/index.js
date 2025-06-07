@@ -62,18 +62,6 @@ app.get('/api/persons/:id', (request, response, next) => {
 
 app.post('/api/persons', (request, response, next) => {
   const body = request.body
-  console.log(!body.name)
-
-  /*if (!body.name) {
-    return response.status(400).json({
-      error: 'name missing'
-    })
-  }
-  if (!body.number) {
-    return response.status(400).json({
-      error: 'number missing'
-    })
-    }*/
 
   const person = new Person({
     name: body.name,
