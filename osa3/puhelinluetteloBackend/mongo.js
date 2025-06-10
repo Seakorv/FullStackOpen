@@ -26,11 +26,11 @@ const person = new Person({
   number: personNumber,
 })
 
-if (personName != null && personNumber != null) {
-  person.save().then(result => {
+if (personName !== null && personNumber !== null) {
+  person.save().then(() => {
     console.log(`added ${person.name} number ${person.number} to phonebook`)
     mongoose.connection.close()
-    })
+  })
 } else {
   Person.find({}).then(result => {
     console.log('phonebook:')
