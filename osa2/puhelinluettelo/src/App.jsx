@@ -77,9 +77,14 @@ const App = () => {
             setIsError(false)
           })
           .catch(error => {
-            setNotificationMessage(
-              `Information of ${personObject.name} has already been removed from server`
-            )
+            console.log(error.status)
+            if (error.status === 404) {
+              setNotificationMessage(
+                `Information of ${personObject.name} has already been removed from server`
+              )
+            } else {
+              setNotificationMessage(error.response.data.error)
+            }
             setTimeout(() => {
               setNotificationMessage(null)
             }, 5000)
@@ -104,6 +109,7 @@ const App = () => {
         setTimeout(() => {
           setNotificationMessage(null)
         }, 5000)
+        setIsError(false)
       })
       .catch(error => {
         // Oikean viestin tulostus löytyi, kun tulosti error-objektin
